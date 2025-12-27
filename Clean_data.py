@@ -38,7 +38,7 @@ class Cleaning:
             self.Remove_duplicates()
         print("🎉 Data cleaning complete!")
         return self.data
-    
-a = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")
-cleaner = Cleaning(data = a)
-data = cleaner.Clean()
+#example    
+# a = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")
+# cleaner = Cleaning(data = a)
+# data = cleaner.Clean()

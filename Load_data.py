@@ -24,7 +24,7 @@ class Dataloader:
             print(f"Unexcpected Error: {e}")
             return 0
         
-
-path = "data/PS_20174392719_1491204439457_log.csv"
-a = Dataloader(path = path)
-a.Load_and_Validate()
+#example
+# path = "data/PS_20174392719_1491204439457_log.csv"
+# a = Dataloader(path = path)
+# a.Load_and_Validate()
