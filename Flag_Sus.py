@@ -11,6 +11,10 @@ class Flag_Sus:
         print(f"✅ Extracted {len(fraud_list)} fraud cases.")
         return fraud_list
     
+    def Flagging(self):
+        self.Sus_activity()
+        return self.data
+    
 #example
 if __name__ == "__main__":
     data = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")
