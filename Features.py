@@ -1,3 +1,4 @@
+from tqdm  import tqdm
 import pandas as pd
 class Features:
     def __init__(self,data):
@@ -29,14 +30,40 @@ class Features:
         )
         print("✔️ frequency_per_day feature created")
 
-    def featuring(self):
+    def Statistics(self):
+        steps = 3
+        with tqdm(total=steps, desc="🔧 Feature Engineering Progress") as pbar:
+            print("🔢 Computing transaction count per customer...")
+            self.data["user_count"] = self.data.groupby("nameOrig")["amount"].transform("count")
+            print("✅ Transaction count per customer completed.")
+            pbar.update(1)
+
+            print("💰 Computing total, average, and maximum transaction amounts...")
+            self.data["user_max"] = self.data.groupby("nameOrig")["amount"].transform("max")
+            self.data["user_avg"] = self.data.groupby("nameOrig")["amount"].transform("mean")
+            self.data["user_sum"] = self.data.groupby("nameOrig")["amount"].transform("sum")
+            print("✅ Transaction amount statistics completed.")
+            pbar.update(1)
+
+            print("📊 Computing rolling transaction statistics...")
+            self.data = self.data.sort_values(by=["nameOrig" , "step"])
+            self.data["rolling_avg_4"] = self.data.groupby("nameOrig")["amount"].transform(lambda x : x.rolling(window = 4 , min_periods = 1).mean())
+            print("✅ Rolling statistics completed.")
+            pbar.update(1)
+
+            print("🎉 Feature engineering completed successfully: all transaction features are ready!")
+
+
+    def Featuring(self):
         self.Convert_timestamp("step")
         self.Frequency_hour()
         self.Frequency_day()
+        self.Statistics()
         return self.data
 
 
-#example:
-# data = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")
-# test = Features(data)
-# test.featuring()
+# example:
+if __name__ == "__main__":
+    data = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")
+    test = Features(data)
+    test.Featuring()
