@@ -7,7 +7,7 @@ class Risk_Anomaly:
     def __init__(self,data):
         self.data = data
     
-    def validate_columns(self , columns_required):
+    def Validate_columns(self , columns_required):
         if isinstance(columns_required , str):
             columns_required = [columns_required]
         
@@ -15,19 +15,19 @@ class Risk_Anomaly:
         if needed_columns:
             raise KeyError(f"❌ Missing required columns: {needed_columns}\nRun previous Step to Get these Columns")
     
-    def compute_z_scores(self):
+    def Compute_z_scores(self):
         os.system("cls")
         print("📊 Calculating Z-Scores...")
-        self.validate_columns(["nameOrig" , "amount" , "user_avg"])
+        self.Validate_columns(["nameOrig" , "amount" , "user_avg"])
         self.data["user_std"] = self.data.groupby("nameOrig")["amount"].transform("std")
         self.data["user_std"] = self.data["user_std"].fillna(1).replace(0,1)
         self.data["z_score"] = (self.data["amount"] - self.data["user_avg"])/self.data["user_std"]
         print("✅ Z-scores computed.")
         time.sleep(1)
     
-    def assign_risk(self):
+    def Assign_risk(self):
         print("🏷️ Assigning Risk Bands...")
-        self.validate_columns("z_score")
+        self.Validate_columns("z_score")
         conditions = [
             (self.data["z_score"]<1),
             (self.data["z_score"]>=1) & (self.data["z_score"]<3),
@@ -41,8 +41,8 @@ class Risk_Anomaly:
         time.sleep(1)
     
     def Run(self):
-        self.compute_z_scores()
-        self.assign_risk()
+        self.Compute_z_scores()
+        self.Assign_risk()
         os.system("cls")
         return self.data
 #example:
