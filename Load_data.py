@@ -11,7 +11,7 @@ class Dataloader:
         try:
             print("⏳ Loading data...")
             time.sleep(1)
-            loaded_data = pd.read_csv(self.path , nrows = 2000)
+            loaded_data = pd.read_csv(self.path , nrows = 3000000)
             if loaded_data.shape[1] != self.expected_columns:
                 print("⚠️ Oops! The data shape is not what we expected 😕")
                 time.sleep(1)

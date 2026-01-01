@@ -11,7 +11,6 @@ class Flag_Sus:
         subset = subset[["nameOrig" , "nameDest" , "amount","isFraud"]]
         fraud_list = subset.to_dict("records")
         print(f"✅ Extracted {len(fraud_list)} fraud cases.")
-        return fraud_list
     
     def Flagging(self):
         os.system("cls")
