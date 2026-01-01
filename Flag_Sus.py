@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+import time
 class Flag_Sus:
     def __init__(self,data):
         self.data = data
@@ -12,7 +14,10 @@ class Flag_Sus:
         return fraud_list
     
     def Flagging(self):
+        os.system("cls")
         self.Sus_activity()
+        time.sleep(1)
+        os.system("cls")
         return self.data
     
 #example

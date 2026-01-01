@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import time
 class Export_Reports:
     def __init__(self,data):
         self.data = data
@@ -39,11 +40,16 @@ class Export_Reports:
             for index , row in top_risky.iterrows():
                 f.write(f"{row["nameOrig"]} | {row["total_flags"]} | {row["total_moved"]}\n")
         print("✅ Report saved.")
+        return top_risky
     
     def Exporting(self):
+        os.system("cls")
         self.Export_flagged_transactions()
-        self.Report_txt()
-        return self.data
+        time.sleep(1)
+        risky_customers = self.Report_txt()
+        time.sleep(1)
+        os.system("cls")
+        return risky_customers
 #example
 if __name__ == "__main__":
     data = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")

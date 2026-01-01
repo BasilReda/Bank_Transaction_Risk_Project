@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from Features import Features
+import os
+import time
 class Risk_Anomaly:
     def __init__(self,data):
         self.data = data
@@ -14,12 +16,14 @@ class Risk_Anomaly:
             raise KeyError(f"❌ Missing required columns: {needed_columns}\nRun previous Step to Get these Columns")
     
     def compute_z_scores(self):
+        os.system("cls")
         print("📊 Calculating Z-Scores...")
         self.validate_columns(["nameOrig" , "amount" , "user_avg"])
         self.data["user_std"] = self.data.groupby("nameOrig")["amount"].transform("std")
         self.data["user_std"] = self.data["user_std"].fillna(1).replace(0,1)
         self.data["z_score"] = (self.data["amount"] - self.data["user_avg"])/self.data["user_std"]
         print("✅ Z-scores computed.")
+        time.sleep(1)
     
     def assign_risk(self):
         print("🏷️ Assigning Risk Bands...")
@@ -34,10 +38,12 @@ class Risk_Anomaly:
         self.data["Risk_Band"] = np.select(conditions , labels , default="Low")
         print("✅ Risk Bands assigned.")
         print(f"summary for risk bands {self.data["Risk_Band"].value_counts()}")
+        time.sleep(1)
     
     def Run(self):
         self.compute_z_scores()
         self.assign_risk()
+        os.system("cls")
         return self.data
 #example:
 if __name__ == "__main__":
