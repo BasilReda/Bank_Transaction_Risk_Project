@@ -22,19 +22,20 @@ This system processes transaction data through a multi-stage pipeline to:
 The system follows a modular, step-by-step pipeline approach:
 
 ```
-Data Loading → Data Cleaning → Feature Engineering → Risk Analysis → Flagging → Report Export
+Data Loading → Data Cleaning → Feature Engineering → Risk Analysis → Report Export
 ```
+
+**Note:** Z-score based flagging is now integrated directly into Risk Analysis. Transactions with Z-score ≥ 1 are automatically flagged as suspicious.
 
 ### Module Breakdown
 
 | Module | Purpose | Key Functions |
 |--------|---------|---------------|
-| **Load_data.py** | Loads and validates CSV files | `Load_and_Validate()` - ensures data integrity |
+| **Load_data.py** | Loads and validates CSV files | `Load_and_Validate()` - loads up to 3M rows and ensures data integrity |
 | **Clean_data.py** | Data preprocessing and cleaning | Removes nulls/duplicates, converts timestamps |
 | **Features.py** | Feature engineering | Creates behavioral patterns (hourly/daily frequency, rolling stats) |
-| **Risk_Anomaly.py** | Anomaly detection | Calculates Z-scores, assigns risk bands (Low/Medium/High/Critical) |
-| **Flag_Sus.py** | Suspicious activity extraction | Identifies confirmed fraud cases |
-| **Export_Reports.py** | Report generation | Creates CSV summaries and text reports |
+| **Risk_Anomaly.py** | Anomaly detection & flagging | Calculates Z-scores, assigns risk bands, identifies suspicious transactions |
+| **Export_Reports.py** | Report generation | Creates CSV summaries and text reports of flagged transactions |
 | **CLI.py** | User interface | Interactive menu-driven workflow |
 
 ---
@@ -59,11 +60,12 @@ Data Loading → Data Cleaning → Feature Engineering → Risk Analysis → Fla
   - **Medium**: Z-score 1-3
   - **High**: Z-score 3-5
   - **Critical**: Z-score ≥ 5
+- 🚩 **Automatic Flagging**: All transactions with Z-score ≥ 1 are flagged as suspicious
 
 ### Reporting
-- 📄 **Flagged Transactions CSV**: All suspicious transactions
-- 👥 **Customer Risk Summary CSV**: Top risky customers with fraud counts and amounts
-- 📝 **Summary Report TXT**: Top 10 risky customers in readable format
+- 📄 **Flagged Transactions CSV**: All transactions with Z-score ≥ 1
+- 👥 **Customer Risk Summary CSV**: Top risky customers ranked by maximum Z-score and total amount
+- 📝 **Summary Report TXT**: Top 10 risky customers with Z-score analysis
 
 ---
 
@@ -105,10 +107,9 @@ This launches an interactive menu where you can:
 1. Load your CSV data
 2. Clean the data
 3. Engineer features
-4. Run anomaly detection
-5. Flag suspicious activities
-6. Export reports
-7. View summary statistics
+4. Run risk analysis (includes Z-score computation & flagging)
+5. Export flagged transactions and reports
+6. View summary statistics
 
 **Option 2: Programmatic Usage**
 ```python
@@ -130,11 +131,11 @@ data = cleaner.Clean()
 engineer = Features(data)
 data = engineer.Featuring()
 
-# Detect anomalies
+# Detect anomalies and flag suspicious transactions
 risk = Risk_Anomaly(data)
 data = risk.Run()
 
-# Export reports
+# Export reports of flagged transactions
 exporter = Export_Reports(data)
 exporter.Exporting()
 ```
@@ -147,19 +148,18 @@ exporter.Exporting()
 python_project/
 ├── main.py                          # Entry point
 ├── CLI.py                           # Interactive user interface
-├── Load_data.py                     # Data loading & validation
+├── Load_data.py                     # Data loading & validation (up to 3M rows)
 ├── Clean_data.py                    # Data cleaning pipeline
 ├── Features.py                      # Feature engineering
-├── Risk_Anomaly.py                  # Risk scoring & anomaly detection
-├── Flag_Sus.py                      # Suspicious activity extraction
-├── Export_Reports.py                # Report generation
+├── Risk_Anomaly.py                  # Risk scoring, Z-score calculation, flagging
+├── Export_Reports.py                # Report generation from flagged transactions
 ├── README.md                        # This file
 ├── data/                            # Input data folder
 │   └── PS_20174392719_1491204439457_log.csv
 ├── output/                          # Generated reports folder
 │   ├── customer_risk_summary.csv    # Risk rankings by customer
-│   ├── flagged_transactions.csv     # All suspicious transactions
-│   └── report.txt                   # Executive summary
+│   ├── flagged_transactions.csv     # All transactions with Z-score ≥ 1
+│   └── report.txt                   # Top 10 risky customers summary
 └── __pycache__/                     # Python cache
 ```
 
@@ -169,11 +169,11 @@ python_project/
 
 ### Step 1: Load Data
 ```
-Input: CSV file (2000 rows sample)
+Input: CSV file (up to 3M rows)
 ↓
 Validates: 11 columns required
 ↓
-Output: Structured pandas DataFrame
+Output: Structured pandas DataFrame ready for processing
 ```
 
 ### Step 2: Clean Data
@@ -198,7 +198,7 @@ Creates:
 Output: Enhanced dataset with behavioral features
 ```
 
-### Step 4: Risk Analysis
+### Step 4: Risk Analysis & Flagging
 ```
 Input: Featured data
 ↓
@@ -206,17 +206,18 @@ Calculates:
   - user_std: Standard deviation per customer
   - z_score: (amount - user_avg) / user_std
   - Risk_Band: Low/Medium/High/Critical based on Z-score
+  - Flags transactions with Z-score ≥ 1 as suspicious
 ↓
-Output: Anomaly scores and risk classifications
+Output: Scored data with risk bands and flagged transactions
 ```
 
-### Step 5-6: Flagging & Export
+### Step 5: Report Export
 ```
-Input: Scored data
+Input: Flagged transaction data
 ↓
 Generates:
-  - flagged_transactions.csv: All fraud cases
-  - customer_risk_summary.csv: Risk rankings
+  - flagged_transactions.csv: All transactions with Z-score ≥ 1
+  - customer_risk_summary.csv: Risk rankings by Z-score and amount
   - report.txt: Top 10 risks in human-readable format
 ↓
 Output: Ready for investigation and action
@@ -230,16 +231,16 @@ Output: Ready for investigation and action
 | Column | Description |
 |--------|-------------|
 | `nameOrig` | Customer ID |
-| `total_flags` | Number of fraudulent transactions |
-| `total_moved` | Total amount stolen |
+| `max_z_score` | Maximum Z-score among flagged transactions |
+| `total_moved` | Total amount in flagged transactions |
 
-**Sorted by:** Flags (descending) → Amount (descending)
+**Sorted by:** Max Z-score (descending) → Amount (descending)
 
 ### flagged_transactions.csv
-All transactions flagged as fraud with complete details.
+All transactions with Z-score ≥ 1, including full transaction details and Z-score values.
 
 ### report.txt
-Human-readable summary of top 10 risky customers for quick review.
+Human-readable summary of top 10 risky customers ranked by maximum Z-score for quick review.
 
 ---
 
@@ -256,16 +257,16 @@ conditions = [
 ]
 ```
 
-### Change Sample Size
+### Change Data Sample Size
 Edit [Load_data.py](Load_data.py#L13):
 ```python
-loaded_data = pd.read_csv(self.path, nrows=5000)  # Increase from 2000
+loaded_data = pd.read_csv(self.path, nrows=5000000)  # Adjust from default 3000000
 ```
 
-### Modify Rolling Window
-Edit [Features.py](Features.py#L40):
+### Adjust Z-Score Flagging Threshold
+Edit [Export_Reports.py](Export_Reports.py#L11):
 ```python
-x.rolling(window=8, min_periods=1).mean()  # Change window size
+self.flagged_data = self.data[self.data["z_score"] >= 1.5]  # Change from 1 to 1.5
 ```
 
 ---
@@ -295,10 +296,12 @@ pip install pandas numpy tqdm
 
 ## ⚠️ Important Notes
 
-- The system analyzes a **2000-row sample** by default (configurable)
+- The system can process **up to 3M rows** of transaction data
+- Flagging is now **Z-score based** (Z-score ≥ 1) instead of isFraud indicator
 - Z-score method works best with **multiple transactions per customer**
-- Risk thresholds may need tuning based on your **domain context**
+- Risk thresholds can be customized based on your **domain context**
 - All output files are **automatically created** in the `output/` folder
+- The older **isFraud column** in data is no longer used for flagging
 
 ---
 

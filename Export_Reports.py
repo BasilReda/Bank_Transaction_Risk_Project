@@ -12,7 +12,7 @@ class Export_Reports:
             os.makedirs("output")
     
     def Export_flagged_transactions(self):
-        self.flagged_data = self.data[self.data["z_score"] >= 1]
+        self.flagged_data = self.data[self.data["z_score"] >= 0]
         if self.flagged_data.empty:
             print("⚠️ No suspicious transactions were flagged. File will be empty.\n")
         else:
