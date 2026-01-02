@@ -24,7 +24,6 @@ class CLI:
         os.system("cls" if os.name == "nt" else "clear")
     
     def Reset_Flags(self):
-        self.loaded_data = None
         self.cleaned_data = None
         self.featured_data = None
         self.risk_data = None
