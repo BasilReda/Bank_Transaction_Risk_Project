@@ -4,7 +4,9 @@ import time
 from Risk_Anomaly import Risk_Anomaly
 from Features import Features
 from Clean_data import Cleaning
+import helper_function as hf
 class Export_Reports:
+
     def __init__(self,data):
         self.data = data
         self.flagged_data = None
@@ -13,8 +15,10 @@ class Export_Reports:
     
     def Export_flagged_transactions(self):
         self.flagged_data = self.data[self.data["z_score"] >= 0]
+        
         if self.flagged_data.empty:
             print("⚠️ No suspicious transactions were flagged. File will be empty.\n")
+
         else:
             file_path = "output/flagged_transactions.csv"
             self.flagged_data.to_csv(file_path , index = False)
@@ -47,12 +51,12 @@ class Export_Reports:
         return top_risky
     
     def Exporting(self):
-        os.system("cls")
+        os.system('cls' if os.name == 'nt' else 'clear')
         self.Export_flagged_transactions()
         time.sleep(1)
         risky_customers = self.Report_txt()
-        time.sleep(1)
-        os.system("cls")
+        hf.wait_user_input()
+        os.system('cls' if os.name == 'nt' else 'clear')
         return risky_customers
 #example
 if __name__ == "__main__":

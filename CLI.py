@@ -6,6 +6,7 @@ from Flag_Sus import Flag_Sus
 from Export_Reports import Export_Reports
 import os
 import time
+import helper_function as hf
 class CLI:
     def __init__(self):
         self.loaded_data = None
@@ -39,27 +40,27 @@ class CLI:
                         self.Clear_Screen()
                         print("⚠️ Data already loaded. Loading again will overwrite existing data.")
                         time.sleep(1)
+                        confirm = input("Do you want to continue? (y/n): ")
+                        if confirm.lower() != "y":
+                            self.Clear_Screen()
+                            continue
 
                     self.Clear_Screen()
-                    path = input("Enter the path to the CSV file: ")
-                    self.path = path
-                    load = Dataloader(self.path)
-                    test = load.Load_and_Validate()
+                    input_path = input("Enter the path to the CSV file: ")
+                    loader = Dataloader(input_path)
+                    new_data = loader.Load_and_Validate()
 
-                    if test is not None:
-                        self.data = test
+                    if new_data is not None:
+                        self.data = new_data
                         self.loaded_data = 1
+                        self.path = input_path
                         self.Clear_Screen()
                         print(f"Current loaded data: {self.path}")
                         time.sleep(1)
 
                     else:
-                        self.data = None
-                        self.loaded_data = None
-                        if self.loaded_data is not None:
-                            self.Clear_Screen()
-                            print(f"Current loaded data: {self.path}")
-                            time.sleep(1)
+                        print("❌ Loading failed. Retaining previous state.")
+                        time.sleep(2)
                 
                 case "2":
                     self.Clear_Screen()
@@ -121,7 +122,7 @@ class CLI:
                     if self.exported_data is not None:
                         self.Clear_Screen()
                         print(self.risky_customers)
-                        time.sleep(5)
+                        hf.await_user_input()
                         self.Clear_Screen()
                     else:
                         print("⚠️ Please perform Exporting Reports first.")

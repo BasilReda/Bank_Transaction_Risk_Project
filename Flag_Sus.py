@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-import time
+import helper_function as hf
 class Flag_Sus:
     def __init__(self,data):
         self.data = data
@@ -13,10 +13,10 @@ class Flag_Sus:
         print(f"✅ Extracted {len(fraud_list)} fraud cases.")
     
     def Flagging(self):
-        os.system("cls")
+        os.system('cls' if os.name == 'nt' else 'clear')
         self.Sus_activity()
-        time.sleep(1)
-        os.system("cls")
+        hf.wait_user_input()
+        os.system('cls' if os.name == 'nt' else 'clear')
         return self.data
     
 #example

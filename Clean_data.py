@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import time
+import helper_function as hf
 class Cleaning:
     def __init__(self,data):
         self.data = data
@@ -57,10 +58,11 @@ class Cleaning:
             self.Remove_duplicates()
         self.Convert_timestamp("step")
         print("🎉 Data cleaning complete!")
-        time.sleep(2)
-        os.system("cls")
+        hf.wait_user_input()
+        os.system('cls' if os.name == 'nt' else 'clear')
         return self.data
-#example    
-# a = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")
-# cleaner = Cleaning(data = a)
-# data = cleaner.Clean()
+#example 
+if __name__ == "__main__":   
+    a = pd.read_csv("data/PS_20174392719_1491204439457_log.csv")
+    cleaner = Cleaning(data = a)
+    data = cleaner.Clean()

@@ -2,6 +2,7 @@ from tqdm  import tqdm
 import pandas as pd
 import time
 import os
+import helper_function as hf
 class Features:
     def __init__(self,data):
         self.data = data
@@ -56,8 +57,8 @@ class Features:
         self.Frequency_day()
         time.sleep(1)
         self.Statistics()
-        time.sleep(1)
-        os.system("cls")
+        hf.wait_user_input()
+        os.system('cls' if os.name == 'nt' else 'clear')
         return self.data
 
 

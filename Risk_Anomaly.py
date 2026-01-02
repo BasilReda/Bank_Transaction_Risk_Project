@@ -3,6 +3,7 @@ import numpy as np
 from Features import Features
 import os
 import time
+import helper_function as hf
 class Risk_Anomaly:
     def __init__(self,data):
         self.data = data
@@ -16,7 +17,7 @@ class Risk_Anomaly:
             raise KeyError(f"❌ Missing required columns: {needed_columns}\nRun previous Step to Get these Columns")
     
     def Compute_z_scores(self):
-        os.system("cls")
+        os.system('cls' if os.name == 'nt' else 'clear')
         print("📊 Calculating Z-Scores...")
         self.Validate_columns(["nameOrig" , "amount" , "user_avg"])
         self.data["user_std"] = self.data.groupby("nameOrig")["amount"].transform("std")
@@ -43,7 +44,8 @@ class Risk_Anomaly:
     def Run(self):
         self.Compute_z_scores()
         self.Assign_risk()
-        os.system("cls")
+        hf.wait_user_input()
+        os.system('cls' if os.name == 'nt' else 'clear')
         return self.data
 #example:
 if __name__ == "__main__":

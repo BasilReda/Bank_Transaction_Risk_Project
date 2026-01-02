@@ -31,7 +31,7 @@ Data Loading → Data Cleaning → Feature Engineering → Risk Analysis → Rep
 
 | Module | Purpose | Key Functions |
 |--------|---------|---------------|
-| **Load_data.py** | Loads and validates CSV files | `Load_and_Validate()` - loads up to 3M rows and ensures data integrity |
+| **Load_data.py** | Loads and validates CSV files | `Load_and_Validate()` - loads up to 6M rows and ensures data integrity |
 | **Clean_data.py** | Data preprocessing and cleaning | Removes nulls/duplicates, converts timestamps |
 | **Features.py** | Feature engineering | Creates behavioral patterns (hourly/daily frequency, rolling stats) |
 | **Risk_Anomaly.py** | Anomaly detection & flagging | Calculates Z-scores, assigns risk bands, identifies suspicious transactions |
