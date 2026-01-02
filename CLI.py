@@ -48,7 +48,7 @@ class CLI:
                     self.Clear_Screen()
                     input_path = input("Enter the path to the CSV file: ")
                     loader = Dataloader(input_path)
-                    new_data = loader.Load_and_Validate()
+                    new_data = loader.Load_and_Validate(nrows = 2000)
 
                     if new_data is not None:
                         self.data = new_data

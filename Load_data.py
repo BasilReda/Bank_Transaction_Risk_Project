@@ -8,11 +8,11 @@ class Dataloader:
         self.data = None
         self.expected_columns_names  = ["step", "type", "amount", "nameOrig", "oldbalanceOrg", "newbalanceOrig", "nameDest", "oldbalanceDest", "newbalanceDest", "isFraud", "isFlaggedFraud"]
 
-    def Load_and_Validate(self):
+    def Load_and_Validate(self , nrows = 2000):
         try:
             print("⏳ Loading data...")
             time.sleep(1)
-            loaded_data = pd.read_csv(self.path , nrows = 2000)
+            loaded_data = pd.read_csv(self.path , nrows = nrows)
             if  list(loaded_data.columns) != self.expected_columns_names:
                 print("⚠️ Oops! The data shape is not what we expected 😕")
                 time.sleep(1)
