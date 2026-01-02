@@ -22,6 +22,14 @@ class CLI:
     
     def Clear_Screen(self):
         os.system("cls" if os.name == "nt" else "clear")
+    
+    def Reset_Flags(self):
+        self.loaded_data = None
+        self.cleaned_data = None
+        self.featured_data = None
+        self.risk_data = None
+        self.flagged_data = None
+        self.exported_data = None
 
     def Run(self):
         while True:
@@ -54,6 +62,7 @@ class CLI:
                         self.data = new_data
                         self.loaded_data = 1
                         self.path = input_path
+                        self.Reset_Flags()
                         self.Clear_Screen()
                         print(f"Current loaded data: {self.path}")
                         time.sleep(1)
