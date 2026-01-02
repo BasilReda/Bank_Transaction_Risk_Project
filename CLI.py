@@ -59,7 +59,13 @@ class CLI:
                         time.sleep(1)
 
                     else:
-                        print("❌ Loading failed. Retaining previous state.")
+                        if self.loaded_data is not None:
+                            print("❌ Loading failed. Retaining previous state.")
+                        else:
+                            print("❌ Loading failed. No data is currently loaded.")
+                            time.sleep(1)
+                        if self.path is not None:
+                            print(f"Current loaded data: {self.path}")
                         time.sleep(2)
                 
                 case "2":
@@ -122,7 +128,7 @@ class CLI:
                     if self.exported_data is not None:
                         self.Clear_Screen()
                         print(self.risky_customers)
-                        hf.await_user_input()
+                        hf.wait_user_input()
                         self.Clear_Screen()
                     else:
                         print("⚠️ Please perform Exporting Reports first.")
