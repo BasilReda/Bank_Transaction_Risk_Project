@@ -2,7 +2,7 @@ from tqdm  import tqdm
 import pandas as pd
 import time
 import os
-import helper_function as hf
+import Bank_Transaction.helper_function as hf
 class Features:
     def __init__(self,data):
         self.data = data

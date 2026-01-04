@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-import helper_function as hf
+import Bank_Transaction.helper_function as hf
 class Flag_Sus:
     def __init__(self,data):
         self.data = data

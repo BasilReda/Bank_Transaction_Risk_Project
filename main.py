@@ -1,4 +1,4 @@
-from CLI import CLI
+from Bank_Transaction.CLI import CLI
 
 if __name__ == "__main__":
     app = CLI()

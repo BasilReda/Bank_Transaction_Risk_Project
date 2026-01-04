@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
-from Features import Features
+from Bank_Transaction.Features import Features
 import os
 import time
-import helper_function as hf
+import Bank_Transaction.helper_function as hf
 class Risk_Anomaly:
     def __init__(self,data):
         self.data = data
