@@ -92,9 +92,16 @@ Located in `data/PS_20174392719_1491204439457_log.csv`
 # Clone or navigate to project directory
 cd e:\vs codes\python_project
 
-# Install required packages
-pip install pandas numpy tqdm
+# Install required packages from requirements.txt
+pip install -r requirements.txt
 ```
+
+**Required Packages** (automatically installed):
+- `pandas` - Data manipulation and analysis
+- `numpy` - Numerical computing
+- `tqdm` - Progress bars for data processing
+
+See [requirements.txt](requirements.txt) for full dependency list.
 
 ### Running the Application
 
@@ -144,6 +151,7 @@ exporter.Exporting()
 python_project/
 ├── main.py                          # Entry point - starts the CLI
 ├── README.md                        # This file
+├── requirements.txt                 # Python package dependencies
 ├── Bank_Transaction/                # Main package directory
 │   ├── __init__.py                  # Package initialization - exports all classes
 │   ├── CLI.py                       # Interactive user interface & workflow orchestration
