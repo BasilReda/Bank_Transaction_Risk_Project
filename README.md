@@ -113,11 +113,7 @@ This launches an interactive menu where you can:
 
 **Option 2: Programmatic Usage**
 ```python
-from Load_data import Dataloader
-from Clean_data import Cleaning
-from Features import Features
-from Risk_Anomaly import Risk_Anomaly
-from Export_Reports import Export_Reports
+from Bank_Transaction import Dataloader, Cleaning, Features, Risk_Anomaly, Export_Reports
 
 # Load data
 loader = Dataloader("data/your_file.csv")
@@ -146,16 +142,21 @@ exporter.Exporting()
 
 ```
 python_project/
-├── main.py                          # Entry point
-├── CLI.py                           # Interactive user interface
-├── Load_data.py                     # Data loading & validation (up to 3M rows)
-├── Clean_data.py                    # Data cleaning pipeline
-├── Features.py                      # Feature engineering
-├── Risk_Anomaly.py                  # Risk scoring, Z-score calculation, flagging
-├── Export_Reports.py                # Report generation from flagged transactions
+├── main.py                          # Entry point - starts the CLI
 ├── README.md                        # This file
+├── Bank_Transaction/                # Main package directory
+│   ├── __init__.py                  # Package initialization - exports all classes
+│   ├── CLI.py                       # Interactive user interface & workflow orchestration
+│   ├── Load_data.py                 # Data loading & validation (up to 6M rows)
+│   ├── Clean_data.py                # Data cleaning pipeline
+│   ├── Features.py                  # Feature engineering & behavioral pattern analysis
+│   ├── Risk_Anomaly.py              # Risk scoring, Z-score calculation, automatic flagging
+│   ├── Flag_Sus.py                  # Suspicious activity extraction
+│   ├── Export_Reports.py            # Report generation from flagged transactions
+│   ├── helper_function.py           # Utility functions (wait_user_input, etc.)
+│   └── __pycache__/                 # Python cache directory
 ├── data/                            # Input data folder
-│   └── PS_20174392719_1491204439457_log.csv
+│   └── PS_20174392719_1491204439457_log.csv (6M+ rows)
 ├── output/                          # Generated reports folder
 │   ├── customer_risk_summary.csv    # Risk rankings by customer
 │   ├── flagged_transactions.csv     # All transactions with Z-score ≥ 1
@@ -163,13 +164,36 @@ python_project/
 └── __pycache__/                     # Python cache
 ```
 
+### Package Architecture (`Bank_Transaction/`)
+
+The project is organized as a **Python package** with centralized imports:
+
+**`__init__.py` - Package Initialization**
+```python
+from Bank_Transaction.Load_data import Dataloader
+from Bank_Transaction.Clean_data import Cleaning
+from Bank_Transaction.Features import Features
+from Bank_Transaction.Risk_Anomaly import Risk_Anomaly
+from Bank_Transaction.Flag_Sus import Flag_Sus
+from Bank_Transaction.Export_Reports import Export_Reports
+
+__all__ = ['Dataloader', 'Cleaning', 'Features', 'Risk_Anomaly', 'Flag_Sus', 'Export_Reports']
+```
+
+**Benefits:**
+- ✅ **Cleaner Imports**: `from Bank_Transaction import Dataloader` instead of `from Bank_Transaction.Load_data import Dataloader`
+- ✅ **Clear Public API**: `__all__` explicitly defines what users should access
+- ✅ **Easy Wildcard Import**: `from Bank_Transaction import *` gets all core classes
+- ✅ **Centralized Dependencies**: All internal imports managed in one place
+- ✅ **Professional Package Structure**: Follows Python packaging best practices
+
 ---
 
 ## 📈 Workflow Example
 
 ### Step 1: Load Data
 ```
-Input: CSV file (up to 3M rows)
+Input: CSV file (up to 6M rows)
 ↓
 Validates: 11 columns required
 ↓
@@ -296,7 +320,7 @@ pip install pandas numpy tqdm
 
 ## ⚠️ Important Notes
 
-- The system can process **up to 3M rows** of transaction data
+- The system can process **up to 6M rows** of transaction data
 - Flagging is now **Z-score based** (Z-score ≥ 1) instead of isFraud indicator
 - Z-score method works best with **multiple transactions per customer**
 - Risk thresholds can be customized based on your **domain context**
